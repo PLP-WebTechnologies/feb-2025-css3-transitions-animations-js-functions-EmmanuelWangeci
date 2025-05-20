@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CSS3 Transitions, Animations & LocalStorage Demo</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 2rem;
+    background-color: #f0f4f8;
+    text-align: center;
+  }
+
+  h1 {
+    margin-bottom: 1rem;
+    color: #333;
+  }
+
+  /* Button styles */
+  #animateBtn {
+    background-color: #4caf50;
+    border: none;
+    color: white;
+    padding: 15px 30px;
+    font-size: 18px;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+  }
+
+  #animateBtn:hover {
+    background-color: #45a049;
+  }
+
+  /* Box to animate */
+  #animatedBox {
+    margin: 2rem auto;
+    width: 150px;
+    height: 150px;
+    background-color: #2196f3;
+    border-radius: 15px;
+    transition: transform 0.5s ease, background-color 0.5s ease;
+  }
+
+  /* CSS Animation keyframes */
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+      background-color: #2196f3;
+    }
+    50% {
+      transform: scale(1.2);
+      background-color: #42a5f5;
+    }
+    100% {
+      transform: scale(1);
+      background-color: #2196f3;
+    }
+  }
+
+  /* Animation class to add dynamically */
+  .pulse-animation {
+    animation: pulse 1s ease-in-out;
+  }
+
+  /* Theme styles */
+  body.light-theme {
+    background-color: #f0f4f8;
+    color: #333;
+  }
+  body.dark-theme {
+    background-color: #222;
+    color: #eee;
+  }
+  body.dark-theme #animatedBox {
+    background-color: #90caf9;
+  }
+  body.dark-theme #animateBtn {
+    background-color: #1565c0;
+  }
+  body.dark-theme #animateBtn:hover {
+    background-color: #0d47a1;
+  }
+</style>
+</head>
+<body>
+
+<h1>CSS3 Animations & localStorage Demo</h1>
+
+<button id="animateBtn">Animate Box</button>
+
+<div id="animatedBox"></div>
+
+<br />
+
+<label>
+  <input type="checkbox" id="themeToggle" />
+  Dark Mode
+</label>
+
+<script>
+  // Select elements
+  const animateBtn = document.getElementById('animateBtn');
+  const animatedBox = document.getElementById('animatedBox');
+  const themeToggle = document.getElementById('themeToggle');
+
+  // Function to trigger animation by toggling CSS class
+  function triggerPulseAnimation() {
+    animatedBox.classList.add('pulse-animation');
+
+    // Remove class after animation completes (1s)
+    setTimeout(() => {
+      animatedBox.classList.remove('pulse-animation');
+    }, 1000);
+  }
+
+  // Event listener for animation button
+  animateBtn.addEventListener('click', () => {
+    triggerPulseAnimation();
+  });
+
+  // Function to save theme preference in localStorage
+  function saveThemePreference(theme) {
+    localStorage.setItem('preferredTheme', theme);
+  }
+
+  // Function to load theme preference from localStorage
+  function loadThemePreference() {
+    return localStorage.getItem('preferredTheme');
+  }
+
+  // Apply theme based on saved preference
+  function applyTheme(theme) {
+    if (theme === 'dark') {
+      document.body.classList.add('dark-theme');
+      document.body.classList.remove('light-theme');
+      themeToggle.checked = true;
+    } else {
+      document.body.classList.add('light-theme');
+      document.body.classList.remove('dark-theme');
+      themeToggle.checked = false;
+    }
+  }
+
+  // Initialize theme on page load
+  window.addEventListener('DOMContentLoaded', () => {
+    const savedTheme = loadThemePreference();
+    applyTheme(savedTheme || 'light');
+  });
+
+  // Toggle theme on checkbox change
+  themeToggle.addEventListener('change', () => {
+    if (themeToggle.checked) {
+      applyTheme('dark');
+      saveThemePreference('dark');
+    } else {
+      applyTheme('light');
+      saveThemePreference('light');
+    }
+  });
+</script>
+
+</body>
+</html>
